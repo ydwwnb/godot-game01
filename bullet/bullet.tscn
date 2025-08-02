@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6yd70kx8kobe"]
+
+[ext_resource type="Texture2D" uid="uid://dqsfc2y47rwql" path="res://art/playerGrey_up1.png" id="1_mriki"]
+[ext_resource type="Script" path="res://bullet/bullet.gd" id="1_oyg7x"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7dl3y"]
+radius = 5.0
+height = 14.0
+
+[node name="bullet" type="RigidBody2D"]
+position = Vector2(60, 50)
+collision_layer = 4
+collision_mask = 2
+gravity_scale = 0.0
+script = ExtResource("1_oyg7x")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("CapsuleShape2D_7dl3y")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 2)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_mriki")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(5.96046e-08, 2.25)
+scale = Vector2(0.4, 0.475)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

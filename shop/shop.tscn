@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3 uid="uid://p4rnbqjxbgpy"]
+
+[ext_resource type="FontFile" uid="uid://cxps4cwdmuqwu" path="res://fonts/Xolonium-Regular.ttf" id="1_rnv8x"]
+
+[node name="shop" type="CanvasLayer"]
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(1000, 300)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -329.0
+offset_right = 500.0
+offset_bottom = 326.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+layout_mode = 0
+offset_right = 997.0
+offset_bottom = 655.0
+color = Color(0.00817202, 0.450285, 0.637156, 1)
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -16.0
+offset_right = 16.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_rnv8x")
+theme_override_font_sizes/font_size = 64
+text = "shop"
+
+[node name="Button" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 388.0
+offset_top = 538.0
+offset_right = 608.0
+offset_bottom = 635.0
+theme_override_fonts/font = ExtResource("1_rnv8x")
+theme_override_font_sizes/font_size = 64
+text = "buy"

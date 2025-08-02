@@ -1,0 +1,14 @@
+Label
+ColorRect
+CheckButton
+ColorPickerButton
+HBoxContainer
+Button
+Panel
+ItemList
+CanvasLayer
+VisibleOnScreenEnabler2D
+NavigationRegion2D
+NavigationAgent2D
+Timer
+PathFollow2D

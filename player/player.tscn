@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3 uid="uid://1kv5u401ua7g"]
+
+[ext_resource type="Texture2D" uid="uid://dqsfc2y47rwql" path="res://art/playerGrey_up1.png" id="1_bln13"]
+[ext_resource type="Script" path="res://player/player.gd" id="1_nra4a"]
+[ext_resource type="Texture2D" uid="uid://beax1nwcbfvph" path="res://art/playerGrey_up2.png" id="2_bt65j"]
+[ext_resource type="PackedScene" uid="uid://c6yd70kx8kobe" path="res://bullet/bullet.tscn" id="2_t2f4a"]
+[ext_resource type="Texture2D" uid="uid://ba4akn3trg21" path="res://art/playerGrey_walk1.png" id="3_3txfh"]
+[ext_resource type="Texture2D" uid="uid://bcuh38k3qtv6o" path="res://art/playerGrey_walk2.png" id="4_fphxt"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kw0g3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_bln13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_bt65j")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_3txfh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_fphxt")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hsvna"]
+radius = 28.0
+height = 70.0
+
+[node name="Player" type="Area2D"]
+position = Vector2(56, 77)
+collision_mask = 2
+script = ExtResource("1_nra4a")
+bullet_scene = ExtResource("2_t2f4a")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_kw0g3")
+animation = &"up"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_hsvna")
+
+[node name="AttackDirection" type="Line2D" parent="."]
+width = 1.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true
+
+[node name="DashCoolDownTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="DashCoolDownTimer" to="." method="_on_dash_cool_down_timer_timeout"]

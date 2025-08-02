@@ -1,0 +1,7 @@
+res://hud/hud.tscn
+res://player/player.tscn
+res://mob/mob.tscn
+res://main/main.tscn
+res://bullet/bullet.tscn
+res://shop/shop.tscn
+res://main/main.gd

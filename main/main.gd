@@ -10,38 +10,60 @@ extends Node
 @onready var player = $Player
 @onready var start_position = $StartPosition
 @onready var mob_spawn_location = $MobPath/MobSpawnLocation
+@onready var shop = $HUD/shop
+
 var score:int
 var survival_time_count:int
 var max_mob_count = 5
+
+var mob_health_boost = 0
+var mob_speed_boost = 0.0
 
 func _ready():
 	pass
 	
 func _process(delta):
+			
 	if survival_time_count > 5:
 		max_mob_count = survival_time_count
 
 func _on_player_hit():
 	#game over
-	survival_timer.stop()
-	mob_timer.stop()
-	
-	hud.show_game_over()
-	music.stop()
-	death_sound.play()
+	player.health -= 1
+	hud.update_health(player.health)
+	if player.health == 0:	
+		survival_timer.stop()
+		mob_timer.stop()
+		hud.show_game_over()
+		music.stop()
+		death_sound.play()
+		player.hide()
+		player.collision_shape.set_deferred("disabled", true)
 
 func new_game():
 	
 	get_tree().call_group("mobs", "queue_free")
-	
-	score = 0
-	player.start(start_position.position)
+	# 初始化player
+	init_player()
 	start_timer.start()
-	
+	score = 100
+	survival_time_count = 0
 	hud.update_score(score)
+	hud.update_health(player.health)
 	hud.show_message("Get Ready")
 	
 	music.play()
+	
+func init_player():
+	player.init()
+	player.start(start_position.position)
+	
+# 更新hud
+func update_hud_health():
+	hud.update_health(player.health)
+	
+func update_hud_score():
+	hud.update_score(score)
 
 func _on_start_timer_timeout():
 	mob_timer.start()
@@ -74,7 +96,8 @@ func _on_mob_timer_timeout():
 		# Choose the velocity for the mob.
 		var velocity = Vector2(randf_range(150.0, 550.0), 0.0)
 		mob.linear_velocity = velocity.rotated(direction)
-
+		mob.speed_boost = mob_speed_boost
+		mob.health_boost = mob_health_boost
 		# Spawn the mob by adding it to the Main scene.
 		add_child(mob)
 	
@@ -84,13 +107,51 @@ func _on_mob_killed(score_value):
 	hud.update_score(score)	
 	
 	
+func _on_shop_buy_something(item):
+	var point = item[0]
+	var value = item[1]
+	var boost_for = item[2]
+	var boost_type = item[3]
 	
-	
-	
-	
-	
-	
-	
-	
-	
-
+	# 判断分数是否足够
+	if score < point: #分数不够
+		pass
+	else:
+		score -= point
+		update_hud_score()
+		if boost_for == "player":
+			if boost_type == "health":
+				##
+				player.health += int(value)
+				update_hud_health()
+			elif boost_type == "speed":
+				##
+				player.speed_boost += float(value)
+			elif boost_type == "bulletnum":
+				##
+				player.bullet_number_boost += int(value)
+			elif boost_type == "cooldown":
+				##
+				player.cool_down_time_boost += float(value)
+				player.update_cool_down()
+			elif boost_type == "shotspeed":
+				##
+				player.shot_speed_boost += float(value)
+				player.update_shot_speed()
+		elif boost_for == "bullet":
+			if boost_type == "panetrate":
+				player.bullet_panetrate_boost += int(value)
+		elif boost_for == "mob":
+			if boost_type == "health":
+				mob_health_boost += int(value)
+			if boost_type == "speed":
+				mob_speed_boost += float(value)
+		
+		
+		
+		
+		
+		
+		
+		
+		

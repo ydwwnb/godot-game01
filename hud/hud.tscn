@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dxrdr0da0cuig"]
+[gd_scene load_steps=6 format=3 uid="uid://dxrdr0da0cuig"]
 
 [ext_resource type="Script" path="res://hud/HUD.gd" id="1_0x5f7"]
 [ext_resource type="FontFile" uid="uid://cxps4cwdmuqwu" path="res://fonts/Xolonium-Regular.ttf" id="2_00700"]
+[ext_resource type="FontFile" uid="uid://cyxhh7ddkn62q" path="res://fonts/Montserrat-Medium.ttf" id="3_f3348"]
 
 [sub_resource type="InputEventAction" id="InputEventAction_clhk2"]
 action = &"start_game"
@@ -77,6 +78,13 @@ grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_00700")
 theme_override_font_sizes/font_size = 64
 text = "survival time: 0"
+
+[node name="Health" type="Label" parent="."]
+offset_right = 202.0
+offset_bottom = 63.0
+theme_override_fonts/font = ExtResource("3_f3348")
+theme_override_font_sizes/font_size = 64
+text = "health: 1"
 
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="timeout" from="MessageTimer" to="." method="_on_message_timer_timeout"]

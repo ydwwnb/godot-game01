@@ -1,11 +1,27 @@
-[gd_scene load_steps=2 format=3 uid="uid://p4rnbqjxbgpy"]
+[gd_scene load_steps=5 format=3 uid="uid://p4rnbqjxbgpy"]
 
 [ext_resource type="FontFile" uid="uid://cxps4cwdmuqwu" path="res://fonts/Xolonium-Regular.ttf" id="1_rnv8x"]
+[ext_resource type="Script" path="res://shop/shop.gd" id="1_v6hb6"]
+[ext_resource type="PackedScene" uid="uid://bp56ukjdlgodk" path="res://shop/shop_item/shop_item.tscn" id="3_5toyt"]
 
-[node name="shop" type="CanvasLayer"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gcjhm"]
+
+[node name="shop" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_v6hb6")
+shop_item_scene = ExtResource("3_5toyt")
 
 [node name="Panel" type="Panel" parent="."]
 custom_minimum_size = Vector2(1000, 300)
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -18,31 +34,48 @@ offset_bottom = 326.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="Panel"]
+[node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0
-offset_right = 997.0
-offset_bottom = 655.0
+offset_left = -500.0
+offset_top = -329.0
+offset_right = 497.0
+offset_bottom = 326.0
 color = Color(0.00817202, 0.450285, 0.637156, 1)
 
-[node name="Label" type="Label" parent="Panel"]
+[node name="Label" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -16.0
-offset_right = 16.0
-offset_bottom = 23.0
+offset_left = -82.0
+offset_top = -329.0
+offset_right = 82.0
+offset_bottom = -251.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("1_rnv8x")
 theme_override_font_sizes/font_size = 64
 text = "shop"
 
-[node name="Button" type="Button" parent="Panel"]
+[node name="BuyButton" type="Button" parent="."]
+material = SubResource("CanvasItemMaterial_gcjhm")
 layout_mode = 0
-offset_left = 388.0
-offset_top = 538.0
-offset_right = 608.0
-offset_bottom = 635.0
+offset_left = -112.0
+offset_top = 209.0
+offset_right = 108.0
+offset_bottom = 306.0
 theme_override_fonts/font = ExtResource("1_rnv8x")
 theme_override_font_sizes/font_size = 64
 text = "buy"
+
+[node name="HFlowContainer" type="FlowContainer" parent="."]
+custom_minimum_size = Vector2(500, 0)
+layout_direction = 2
+layout_mode = 1
+offset_left = -424.0
+offset_top = -220.0
+offset_right = 456.0
+offset_bottom = 220.0
+theme_override_constants/h_separation = 180
+theme_override_constants/v_separation = 220
+
+[connection signal="pressed" from="BuyButton" to="." method="_on_buy_button_pressed"]

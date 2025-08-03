@@ -18,13 +18,20 @@ var mob_type
 var player_position = Vector2.ZERO
 var direction_to_player = Vector2.ZERO
 var direction_to_wander = Vector2.ZERO
-var speed = 200
 var distance_to_player
 var dash_direction = Vector2.ZERO
 var is_dashing = false
 var dash_speed = 1000
 var is_dash_cooling_down = false
 var screen_size
+
+
+# 商店属性
+@export var health = 1
+@export var health_boost = 0
+@export var speed = 200
+@export var speed_boost = 0.0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# 绑定导航地图
@@ -46,7 +53,7 @@ func _ready():
 		set_new_target()
 	
 	add_to_group("mobs")
-	
+	add_to_group("pauseable")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
@@ -105,10 +112,12 @@ func update_velocity_line():
 
 
 func _on_body_entered(body):
-	emit_signal("mob_killed", 1)
-	hide()
-	collision_shape.set_deferred("disabled", true)
-	queue_free()
+	health -= 1
+	if health == 0:
+		emit_signal("mob_killed", 1)
+		hide()
+		collision_shape.set_deferred("disabled", true)
+		queue_free()
 	
 func mob_run():
 	pass

@@ -11,7 +11,7 @@ signal hit
 @onready var dash_timer = $DashTimer
 @onready var dash_cool_down_timer = $DashCoolDownTimer
 
-@export var speed = 400
+
 var screen_size
 var could_attack = true
 var dash_velocity = 1000
@@ -20,11 +20,34 @@ var velocity = Vector2.ZERO
 var dash_direction = Vector2.ZERO
 var count = 0
 var could_dash = true
+
+# 可升级属性
+@export var health = 2
+@export var original_health = 2
+@export var speed = 400
+@export var speed_boost = 0.0 #速度增益
+@export var damage = 1
+@export var damage_boost = 0.0
+@export var cool_down_time = 1
+@export var cool_down_time_boost = 0.0 
+@export var min_cool_down_time = 0.05
+@export var shot_speed = 0.5
+@export var shot_speed_boost = 0.0
+@export var min_shot_seppd = 0.05
+# 一次射击产生的子弹数量
+@export var bullet_number = 1
+@export var bullet_number_boost = 0
+# 子弹穿透
+@export var bullet_panetrate = 0
+@export var bullet_panetrate_boost = 0
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	screen_size = get_viewport_rect().size
 	hide()
 	add_to_group("player")
+	add_to_group("pauseable")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -40,7 +63,7 @@ func _process(delta):
 			velocity.y += 1
 
 		if velocity.length() > 0:
-			velocity = velocity.normalized() * speed
+			velocity = velocity.normalized() * (speed * (1 + speed_boost))
 			animated_sprite.play() 
 		else :
 			animated_sprite.stop()
@@ -79,11 +102,30 @@ func _process(delta):
 	if Input.is_action_pressed("player_dash") && !is_dashing && could_dash:
 		dash(direction)
 
+# 初始化player
+func init():
+	health = original_health
+	
+func update_shot_speed():
+	
+	attack_timer.wait_time = shot_speed * (1 - shot_speed_boost)
+	if attack_timer.wait_time <= min_shot_seppd:
+		attack_timer.wait_time = min_shot_seppd
+	
+func update_cool_down():
+	dash_cool_down_timer.wait_time = cool_down_time * (1 - cool_down_time_boost)
+	if dash_cool_down_timer.wait_time <= min_cool_down_time:
+		dash_cool_down_timer.wait_time = min_cool_down_time
 
+	
 func _on_body_entered(body):
-	hide()
+	
 	hit.emit()
-	collision_shape.set_deferred("disabled", true)
+	#health -= 1
+	#if health == 0:
+		#hide()
+		#hit.emit()
+		#collision_shape.set_deferred("disabled", true)
 	
 	
 func start(pos):
@@ -93,12 +135,15 @@ func start(pos):
 	
 	
 func attack(direction):
-	var bullet = bullet_scene.instantiate()
-	bullet.direction = direction
-	bullet.position = global_position
-	get_parent().add_child(bullet)
-	could_attack = false
-	attack_timer.start()
+	for i in range(bullet_number + bullet_number_boost):
+		var bullet = bullet_scene.instantiate()
+		#bullet.direction = direction.rotated(deg_to_rad(pow(-1, i) * i * 1))
+		bullet.direction = direction.rotated(pow(-1, i) * i * 5 * PI / 180)
+		bullet.position = global_position
+		bullet.panetrate = bullet_panetrate + bullet_panetrate_boost
+		get_parent().add_child(bullet)
+		could_attack = false
+		attack_timer.start()
 	
 func dash(direction):
 	dash_direction = direction

@@ -2,8 +2,11 @@ extends RigidBody2D
 
 @onready var collision_shape = $CollisionShape2D
 
-var speed = 2000
+
 var direction = Vector2.RIGHT
+
+@export var speed = 2000
+@export var panetrate = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -26,5 +29,9 @@ func _on_visible_on_screen_notifier_2d_screen_exited():
 
 
 func _on_body_entered(body):
-	hide()
-	collision_shape.set_deferred("disabled", true)
+	print(panetrate)
+	if panetrate == 0:
+		hide()
+		collision_shape.set_deferred("disabled", true)
+		queue_free()
+	panetrate -= 1

@@ -7,6 +7,7 @@ signal start_game
 @onready var start_button = $StartButton
 @onready var message_timer = $MessageTimer
 @onready var survival_time = $SurvivalTime
+@onready var Health_label = $Health
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -38,6 +39,9 @@ func update_score(score):
 	
 func update_survival_time(time):
 	survival_time.text = "survival time: " + str(time)
+	
+func update_health(health):
+	Health_label.text = "health: " + str(health)
 
 
 func _on_start_button_pressed():

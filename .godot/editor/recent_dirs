@@ -1,10 +1,11 @@
-res://hud
-res://
+res://player
 res://fonts
+res://shop/shop_item
+res://
+res://hud
 res://shop
 E:/godot/projects/game01
 res://bullet
 res://art
 res://main
 res://mob
-res://player

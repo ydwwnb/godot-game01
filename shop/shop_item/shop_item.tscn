@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bp56ukjdlgodk"]
 
 [ext_resource type="FontFile" uid="uid://cyxhh7ddkn62q" path="res://fonts/Montserrat-Medium.ttf" id="1_0sau3"]
-[ext_resource type="Script" path="res://shop/shop_item/shop_item.gd" id="1_cyxql"]
+[ext_resource type="Script" uid="uid://by5htd46i4qvt" path="res://shop/shop_item/shop_item.gd" id="1_cyxql"]
 
 [node name="ShopItem" type="Control"]
 layout_mode = 3

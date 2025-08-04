@@ -77,7 +77,7 @@ func _on_survival_timer_timeout():
 func _on_mob_timer_timeout():
 	#数量超过上限不再生成
 	var mob_count = get_tree().get_nodes_in_group("mobs").size()
-	if mob_count < max_mob_count:
+	if mob_count < 1:
 		# Create a new instance of the Mob scene.
 		var mob = mob_scene.instantiate()
 		# 链接mob被击中信号

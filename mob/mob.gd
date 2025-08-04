@@ -10,7 +10,7 @@ signal mob_killed(score_value)
 @onready var mob_dash_cool_down_timer = $MobDashCoolDownTimer
 @onready var navigation_agent = $NavigationAgent2D
 @onready var navigation_region = $NavigationRegion2D
-
+@onready var prepare_to_dash_timer = $PrepareDashTimer
 # walk: 原始类型，只会按照初始方向行进
 # swim： 一直朝着玩家方向前进
 # fly： 四处游走，发现玩家在周围一定距离内后，向当时的玩家方向冲刺
@@ -24,7 +24,10 @@ var is_dashing = false
 var dash_speed = 1000
 var is_dash_cooling_down = false
 var screen_size
-
+var is_prepareing_to_dash = false
+var is_ready_to_dash = false
+var is_could_to_dash =false
+var count = 0
 
 # 商店属性
 @export var health = 1
@@ -46,7 +49,7 @@ func _ready():
 	max_contacts_reported = 1
 	var mob_types = Array(animated_sprite.sprite_frames.get_animation_names())
 	animated_sprite.animation = mob_types.pick_random()
-	#animated_sprite.animation = "fly"
+	animated_sprite.animation = "fly"
 	animated_sprite.play() 
 	mob_type = str(animated_sprite.animation)
 	if mob_type == "fly":
@@ -58,27 +61,40 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	var player = get_tree().get_first_node_in_group("player")
-	
 	if player:
 		player_position = player.global_position
 		direction_to_player = (player_position - global_position).normalized()
 		distance_to_player = (player_position - global_position).length()
 	if mob_type == "fly":
 		#如果不是冲刺状态，向随机方向游走
-		if !is_dashing:
+		if !is_dashing && !is_prepareing_to_dash && !is_ready_to_dash:
 			#如果导航结束，设置一个新的位置
 			if navigation_agent.is_navigation_finished():
+				print("finished")
 				set_new_target()
 			var next_path_pos = navigation_agent.get_next_path_position()
 			direction_to_wander = (next_path_pos - global_position).normalized()
 			rotation = direction_to_wander.angle()
-			linear_velocity = linear_velocity.lerp(direction_to_wander * speed, delta * 5.0)
-			#检查和玩家的距离，如果小于某个值就向当时玩家的方向冲刺
-		if distance_to_player < 500 && !is_dashing && !is_dash_cooling_down:
+			linear_velocity = direction_to_wander * speed
+			#检查和玩家的距离，如果小于某个值就进入准备冲刺阶段
+			
+		is_could_to_dash = (distance_to_player < 500 && !is_dashing && !is_dash_cooling_down && !is_prepareing_to_dash && !is_ready_to_dash)
+		if is_could_to_dash:
+			# 可以冲刺，进入冲刺准备阶段
+			prepare_to_dash_timer.start()
+			is_prepareing_to_dash = true
+		elif is_prepareing_to_dash:
+			# 准备冲刺，mob停止移动，方向始终朝向player
+			linear_velocity = Vector2.ZERO
 			rotation = direction_to_player.angle()
-			linear_velocity = direction_to_player * dash_speed
-			is_dashing = true
+			dash_direction = direction_to_player
+		elif is_ready_to_dash:
+			# 可以冲刺，mob冲向player
+			is_ready_to_dash = false
+			rotation = dash_direction.angle()
+			linear_velocity = dash_direction * dash_speed
 			is_dash_cooling_down = true
+			is_dashing = true
 			mob_dash_timer.start()
 			mob_dash_cool_down_timer.start()
 			#强制完成mob的导航状态
@@ -125,6 +141,7 @@ func mob_run():
 
 func _on_mob_dash_timer_timeout():
 	is_dashing = false
+	is_ready_to_dash =false
 
 
 func _on_mob_dash_cool_down_timer_timeout():
@@ -149,13 +166,14 @@ func set_new_target():
 	
 # 强制完成导航状态
 func force_finish_navigation():
+	
 	navigation_agent.target_position = global_position
+	print(navigation_agent.is_navigation_finished())
 	
 	
-	
-	
-	
-	
-	
-	
-	
+
+func _on_prepare_dash_timer_timeout() -> void:
+	# 冲刺准备时间结束，将is_prepareing_to_dash 修改为false
+	# 将is_ready_to_dash修改为true
+	is_prepareing_to_dash = false
+	is_ready_to_dash = true

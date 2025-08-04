@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://p4rnbqjxbgpy"]
 
 [ext_resource type="FontFile" uid="uid://cxps4cwdmuqwu" path="res://fonts/Xolonium-Regular.ttf" id="1_rnv8x"]
-[ext_resource type="Script" path="res://shop/shop.gd" id="1_v6hb6"]
+[ext_resource type="Script" uid="uid://b6ajm3578p45b" path="res://shop/shop.gd" id="1_v6hb6"]
 [ext_resource type="PackedScene" uid="uid://bp56ukjdlgodk" path="res://shop/shop_item/shop_item.tscn" id="3_5toyt"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gcjhm"]

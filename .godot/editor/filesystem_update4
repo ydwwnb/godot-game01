@@ -1,11 +1,8 @@
-res://main/main.tscn
-res://main/main.gd
 res://player/player.tscn
-res://player/player.gd
-res://shop/shop.tscn
-res://shop/shop.gd
 res://mob/mob.tscn
+res://main/main.tscn
 res://bullet/bullet.tscn
+res://shop/shop.tscn
 res://hud/hud.tscn
 res://shop/shop_item/shop_item.tscn
-res://bullet/bullet.gd
+res://mob/mob.gd
